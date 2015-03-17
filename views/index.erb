@@ -34,28 +34,40 @@
   </script>
 
   <script type="text/javascript">
-    var cells;
-    var options = { preload: preload, create: create, update: update };
-    var game = new Phaser.Game(800, 600, Phaser.AUTO, 'TicTacToe', options);
+   window.onload = function(){
+    (function(){
+      var cells;
+      var options = { preload: preload, create: create, update: update };
+      var game = new Phaser.Game(800, 600, Phaser.AUTO, 'TicTacToe', options);
 
-    function preload() {
-      game.load.spritesheet('item', 'assets/buttons/number-buttons-90x90.png', 90, 90);
-    }
+      function preload() {
+        game.load.spritesheet('item', '/images/number-buttons-90x90.png', 90, 90);
+      }
 
-    function create() {
-      // Create item container group.
-      cells = game.add.group();
+      function create() {
+        cells = game.add.group();
+        makeBoard(cells);
+      }
 
-      // Draw rectangle
-      // var graphics = game.add.graphics(0, 0);
+      function update() {}
 
-      // graphics.lineStyle(2, 0x0000FF, 1);
-      // graphics.drawRect(50, 250, 100, 100);
-    }
 
-    function update() {
-    }
 
+      var makeBoard = function(cells) {
+        for(var i = 1; i <= 5; i++) {
+          for(var j = 1; j <= 5; j++) {
+            var one_cell;
+            one_cell = cells.create(90*i, 90*j, 'item', i-1);
+            one_cell.name = 'block' + i + j;
+            one_cell.inputEnabled = true;
+            // FIXME: only while test
+            one_cell.input.enableDrag();
+          }
+        };
+      }
+
+    })();
+  };
   </script>
 
 </html>
