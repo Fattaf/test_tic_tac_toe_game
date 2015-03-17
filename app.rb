@@ -19,6 +19,7 @@ class App < Sinatra::Base
         end
 
         ws.onmessage do |msg|
+          # FIXME: all!!!
           EM.next_tick { settings.sockets.each{|s| s.send(msg) } }
         end
 

@@ -7,7 +7,7 @@
       <div id="msgs"></div>
   </body>
 
-
+  <script src="//cdn.jsdelivr.net/phaser/2.2.2/phaser.min.js"></script>
   <script type="text/javascript">
     window.onload = function(){
       (function(){
@@ -31,6 +31,31 @@
         }(document.getElementById('form'));
       })();
     }
+  </script>
+
+  <script type="text/javascript">
+    var cells;
+    var options = { preload: preload, create: create, update: update };
+    var game = new Phaser.Game(800, 600, Phaser.AUTO, 'TicTacToe', options);
+
+    function preload() {
+      game.load.spritesheet('item', 'assets/buttons/number-buttons-90x90.png', 90, 90);
+    }
+
+    function create() {
+      // Create item container group.
+      cells = game.add.group();
+
+      // Draw rectangle
+      // var graphics = game.add.graphics(0, 0);
+
+      // graphics.lineStyle(2, 0x0000FF, 1);
+      // graphics.drawRect(50, 250, 100, 100);
+    }
+
+    function update() {
+    }
+
   </script>
 
 </html>
