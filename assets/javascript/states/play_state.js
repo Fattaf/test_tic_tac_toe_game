@@ -11,23 +11,37 @@ PlayState.prototype = {
   },
 
   makeBoard: function(board) {
-    for(var i = 1; i <= 5; i++) {
-      for(var j = 1; j <= 5; j++) {
+    for(var i = 1; i <= 3; i++) {
+      for(var j = 1; j <= 3; j++) {
         var cell;
         cell = board.create(100*i, 100*j, 'item', 0);
         cell.name = 'cell' + i + j;
+
         cell.inputEnabled = true;
-        // FIXME: only while test
-        // cell.input.enableDrag();
         cell.events.onInputDown.add(this.onDownAction, cell);
+        cell.events.onInputOver.add(this.onNarrowAction, cell);
+        cell.events.onInputOut.add(this.onUnNarrowAction, cell);
       }
     };
   },
 
-  onDownAction: function(cell) {
+  onUnNarrowAction: function() {
+    console.log('UNnarrowed');
+
+    this.frame = 0;
+  },
+
+  onNarrowAction: function() {
+    console.log('narrowed');
+
+    this.frame = 1;
+  },
+
+  onDownAction: function() {
     console.log('clicked');
 
-    cell.setFrames(1);
+    this.frame = 2;
+    this.events.destroy();
   }
 
 };
