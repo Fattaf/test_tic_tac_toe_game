@@ -26,20 +26,17 @@ PlayState.prototype = {
   },
 
   onUnNarrowAction: function() {
-    console.log('UNnarrowed');
-
     this.frame = 0;
   },
 
   onNarrowAction: function() {
-    console.log('narrowed');
-
     this.frame = 1;
   },
 
   onDownAction: function() {
     console.log('clicked');
 
+    socket.send(this.name);
     this.frame = 2;
     this.events.destroy();
   }
