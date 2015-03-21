@@ -3,6 +3,13 @@ function PlayState() {};
 PlayState.prototype = {
   board: null,
 
+  preload: function() {
+    console.log('PlayState#preload');
+
+    // TODO: implement
+    socket.onmessage = function() {};
+  },
+
   create: function() {
     console.log('PlayState#create');
 
