@@ -9,12 +9,12 @@ PreloadState.prototype = {
     this.launchLoader();
     this.load.image('startButton', '/images/test_play.png')
     this.load.spritesheet('item', '/images/number-buttons-90x90.png', 90, 90);
-    // FIXME: for test only!!!!
-    for(var i = 0; i < 100; i++) {
-      console.log('load...');
-      this.load.spritesheet('buttons' + i, '/images/number-buttons-90x90.png');
-    };
 
+    // FIXME: for test only!!!! Delete after
+    for(var i = 0; i < 100; i++) {
+      this.load.spritesheet('item' + i, '/images/number-buttons-90x90.png', 90, 90);
+      console.log('load...');
+    };
   },
 
   create: function() {

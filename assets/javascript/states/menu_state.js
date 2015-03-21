@@ -4,7 +4,7 @@ MenuState.prototype = {
   button: null,
 
   create: function() {
-    console.log('MenuState#preload');
+    console.log('MenuState#create');
 
     var posX = this.world.centerX,
         posY = this.world.centerY;
@@ -13,7 +13,7 @@ MenuState.prototype = {
   },
 
   actionOnClick: function() {
-    this.state.start('Play');
+    this.state.start('Connection');
   }
 
 };
