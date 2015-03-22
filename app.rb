@@ -42,6 +42,7 @@ class App < Sinatra::Base
     else
       request.websocket do |ws|
         # TODO: on error
+        # FIXME: ready message form opponent
 
         ws.onopen do
           # FIXME: only for test, delete after
@@ -59,9 +60,6 @@ class App < Sinatra::Base
           close_connection(ws)
         end
 
-        ws.onerror do
-          ws.send('error.')
-        end
       end
     end
   end
@@ -102,7 +100,6 @@ class App < Sinatra::Base
         opponent = player.game.opponent(player)
         opponent.socket.send(msg)
       }
-      # EM.next_tick { settings.sockets.values.each{|player| player.socket.send(msg) } }
     end
 
     def close_connection(ws)

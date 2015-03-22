@@ -1,29 +1,31 @@
-// FIXME ready message form opponent
-
 function PlayState() {};
 
 PlayState.prototype = {
   board: null,
 
-  preload: function() {
-    console.log('PlayState#preload');
-
-    onMessage = function(msg) { console.log(msg.data) };
-    SocketWrapper.onMessageHandler(onMessage);
-  },
+  // preload: function() {
+  //   console.log('PlayState#preload');
+  // },
 
   create: function() {
     console.log('PlayState#create');
-
+    var self = this;
     this.board = this.add.group();
-    this.makeBoard(this.board);
+    this.makeBoard();
+
+
+    onMessage = function(msg) {
+      var board = self.board;
+      self.findCell(msg.data, board);
+    };
+    SocketWrapper.onMessageHandler(onMessage);
   },
 
-  makeBoard: function(board) {
+  makeBoard: function() {
     for(var i = 1; i <= 3; i++) {
       for(var j = 1; j <= 3; j++) {
         var cell;
-        cell = board.create(100*i, 100*j, 'item', 0);
+        cell = this.board.create(100*i, 100*j, 'item', 0);
         cell.name = 'cell' + i + j;
 
         cell.inputEnabled = true;
@@ -49,6 +51,21 @@ PlayState.prototype = {
 
     this.frame = 2;
     this.events.destroy();
+  },
+
+  findCell: function(name, board) {
+    console.log(name);
+    var children = board.children;
+
+    for (i in children) {
+      if (children[i].name === name) {
+
+        children[i].frame = 3;
+        children[i].events.destroy();
+
+        break;
+      };
+    };
   }
 
 };
