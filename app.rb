@@ -22,7 +22,7 @@ class App < Sinatra::Base
     serve '/images', from: 'assets/images'
 
     js :app, '/js/app.js', [
-      '/js/websocket.js',
+      '/js/socket_wrapper.js',
       '/js/states/*.js',
       '/js/game.js'
     ]
@@ -44,7 +44,7 @@ class App < Sinatra::Base
         # TODO: on error
 
         ws.onopen do
-          # FIXME: delete
+          # FIXME: only for test, delete after
           sleep(2)
 
           player = open_connection(ws)
@@ -52,11 +52,15 @@ class App < Sinatra::Base
         end
 
         ws.onmessage do |msg|
-          send_message(msg)
+          send_opponent_message(ws, msg)
         end
 
         ws.onclose do
           close_connection(ws)
+        end
+
+        ws.onerror do
+          ws.send('error.')
         end
       end
     end
@@ -92,8 +96,12 @@ class App < Sinatra::Base
       player
     end
 
-    def send_message(msg)
-      # FIXME: not all sockets!!!
+    def send_opponent_message(ws, msg)
+      EM.next_tick {
+        player = settings.sockets[ws.object_id]
+        opponent = player.game.opponent(player)
+        opponent.socket.send(msg)
+      }
       # EM.next_tick { settings.sockets.values.each{|player| player.socket.send(msg) } }
     end
 

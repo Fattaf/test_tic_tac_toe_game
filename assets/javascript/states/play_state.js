@@ -1,3 +1,5 @@
+// FIXME ready message form opponent
+
 function PlayState() {};
 
 PlayState.prototype = {
@@ -6,8 +8,8 @@ PlayState.prototype = {
   preload: function() {
     console.log('PlayState#preload');
 
-    // TODO: implement
-    socket.onmessage = function() {};
+    onMessage = function(msg) { console.log(msg.data) };
+    SocketWrapper.onMessageHandler(onMessage);
   },
 
   create: function() {
@@ -43,7 +45,8 @@ PlayState.prototype = {
   onDownAction: function() {
     console.log('clicked');
 
-    socket.send(this.name);
+    SocketWrapper.sendMessage(this.name);
+
     this.frame = 2;
     this.events.destroy();
   }

@@ -25,16 +25,15 @@ ConnectionState.prototype = {
 
   openSocketConn: function() {
     var self = this;
-    socket = new WebSocket('ws://' + window.location.host + window.location.pathname);
-    socket.onmessage = function(message) {
+
+    SocketWrapper.openConnection();
+
+    onMessage = function(message) {
       self.addText(message.data);
-
-      // TODO: refactoring
-
-      if (message.data === 'Game found.') {
-        self.onSuccessEvent();
-      };
+      if (message.data === 'Game found.') { self.onSuccessEvent(); };
     };
+
+    SocketWrapper.onMessageHandler(onMessage);
   },
 
   onSuccessEvent: function() {

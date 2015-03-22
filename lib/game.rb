@@ -7,4 +7,9 @@ class Game
     @player_o = args[:player_o]
   end
 
+  def opponent(player)
+    return false unless [player_x, player_o].include?(player)
+    player === player_x ? player_o : player_x
+  end
+
 end
