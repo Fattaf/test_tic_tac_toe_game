@@ -54,10 +54,11 @@ class App < Sinatra::Base
         end
 
         ws.onmessage do |msg|
+          data = JSON.parse(msg)
           player = settings.sockets[ws.object_id]
 
-          mark_on_board(msg, player)
-          send_opponent_message(player, msg)
+          mark_on_board(player, data)
+          check_the_game(player, data, msg)
         end
 
         ws.onclose do
@@ -69,6 +70,36 @@ class App < Sinatra::Base
   end
 
   private
+    def check_the_game(player, data, msg)
+      if player_win?(player, data)
+        send_win_move_message(player)
+      elsif !player.game.has_moves?
+        send_no_moves_message(player)
+      else
+        # game goes on!
+        send_opponent_message(player, msg)
+      end
+    end
+
+    def send_win_move_message(player)
+      message = { status: 'finish', msg: 'You win!' }
+      player.socket.send(message.to_json)
+      message[:msg] = 'You lose!'
+      send_opponent_message(player, message.to_json)
+    end
+
+    def send_no_moves_message(player)
+      message = { status: 'finish', msg: 'No moves left!' }
+      player.socket.send(message)
+      send_opponent_message(player, message.to_json)
+    end
+
+    def player_win?(player, data)
+      pos_x = data['pos_x'].to_i
+      pos_y = data['pos_y'].to_i
+      player.game.has_win_on_move?(pos_x, pos_y, player)
+    end
+
     def search_game(player)
       new_game = settings.open_games.pop
       return join_game(player, new_game) if new_game
@@ -79,16 +110,17 @@ class App < Sinatra::Base
       new_game = Game.new({ player_x: player })
       player.game = new_game
       settings.open_games << new_game
-
-      player.socket.send({ status: 'pending', msg: 'Game created. Waiting for player.'}.to_json)
+      message = { status: 'pending', msg: 'Game created. Waiting for player.'}.to_json
+      player.socket.send(message)
       new_game
     end
 
     def join_game(player, game)
       player.game = game
       game.player_o = player
-      game.player_x.socket.send({ status: 'success', msg: 'Game found.' }.to_json)
-      game.player_o.socket.send({ status: 'success', msg: 'Game found.' }.to_json)
+      message = { status: 'success', msg: 'Game found.' }.to_json
+      game.player_x.socket.send(message)
+      game.player_o.socket.send(message)
       game
     end
 
@@ -105,9 +137,10 @@ class App < Sinatra::Base
       }
     end
 
-    def mark_on_board(msg, player)
-      data = JSON.parse(msg)
-      player.game.mark_from_msg(data)
+    def mark_on_board(player, data)
+      pos_x = data['pos_x'].to_i
+      pos_y = data['pos_y'].to_i
+      player.game.mark_the_move(pos_x, pos_y, player)
     end
 
     def close_connection(ws)

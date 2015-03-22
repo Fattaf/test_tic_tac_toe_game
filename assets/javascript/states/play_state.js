@@ -44,7 +44,8 @@ PlayState.prototype = {
     console.log('clicked');
 
     var res = this.name.match(/(\d+)_(\d+)/)
-    var message = JSON.stringify({ pos_x: res[1], pos_y: res[2] })
+    var message = JSON.stringify({ status: 'move', pos_x: res[1], pos_y: res[2] })
+
     SocketWrapper.sendMessage(message);
 
     this.frame = 2;
@@ -55,8 +56,6 @@ PlayState.prototype = {
     var obj = JSON.parse(data);
     var name = 'cell_' + obj.pos_x + '_' + obj.pos_y;
     var children = board.children;
-
-    console.log(name);
 
     for (i in children) {
       if (children[i].name === name) {
