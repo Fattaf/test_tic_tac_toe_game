@@ -1,4 +1,5 @@
 require 'thin'
+require 'json'
 require 'sinatra/base'
 require 'sinatra-websocket'
 require 'sinatra/assetpack'
@@ -53,7 +54,10 @@ class App < Sinatra::Base
         end
 
         ws.onmessage do |msg|
-          send_opponent_message(ws, msg)
+          player = settings.sockets[ws.object_id]
+
+          mark_on_board(msg, player)
+          send_opponent_message(player, msg)
         end
 
         ws.onclose do
@@ -76,15 +80,15 @@ class App < Sinatra::Base
       player.game = new_game
       settings.open_games << new_game
 
-      player.socket.send('Game created. Searching other player.')
+      player.socket.send({ status: 'pending', msg: 'Game created. Waiting for player.'}.to_json)
       new_game
     end
 
     def join_game(player, game)
       player.game = game
       game.player_o = player
-      game.player_o.socket.send('Game found.')
-      game.player_x.socket.send('Game found.')
+      game.player_x.socket.send({ status: 'success', msg: 'Game found.' }.to_json)
+      game.player_o.socket.send({ status: 'success', msg: 'Game found.' }.to_json)
       game
     end
 
@@ -94,17 +98,22 @@ class App < Sinatra::Base
       player
     end
 
-    def send_opponent_message(ws, msg)
+    def send_opponent_message(player, msg)
       EM.next_tick {
-        player = settings.sockets[ws.object_id]
         opponent = player.game.opponent(player)
         opponent.socket.send(msg)
       }
     end
 
+    def mark_on_board(msg, player)
+      data = JSON.parse(msg)
+      player.game.mark_from_msg(data)
+    end
+
     def close_connection(ws)
-      # TODO: may be delete game!
+      # TODO: delete game!
       warn("websocket closed")
+
       settings.sockets.delete(ws.object_id)
     end
 

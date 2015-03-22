@@ -1,7 +1,7 @@
 function ConnectionState() {};
 
 ConnectionState.prototype = {
-  response: null,
+  outputText: null,
 
   create: function() {
     console.log('ConnectionState#create');
@@ -15,11 +15,11 @@ ConnectionState.prototype = {
         posY = this.world.centerY,
         style = { font: "22px Arial", fill: "#ff0044", align: "center" };
 
-    if (this.response === null) {
-      this.response = this.add.text(posX, posY, message, style);
-      this.response.anchor.set(0.5);
+    if (this.outputText === null) {
+      this.outputText = this.add.text(posX, posY, message, style);
+      this.outputText.anchor.set(0.5);
     } else {
-      this.response.text = message;
+      this.outputText.text = message;
     };
   },
 
@@ -28,15 +28,18 @@ ConnectionState.prototype = {
 
     SocketWrapper.openConnection();
 
-    onMessage = function(message) {
-      self.addText(message.data);
-      if (message.data === 'Game found.') { self.onSuccessEvent(); };
+    var onMessageEvent = function(message) {
+      var data = JSON.parse(message.data);
+      self.addText(data.msg);
+      if (data.status === 'success') { self.onSuccessEvent(); };
     };
 
-    SocketWrapper.onMessageHandler(onMessage);
+    SocketWrapper.onMessageHandler(onMessageEvent);
   },
 
   onSuccessEvent: function() {
     this.state.start('Play');
-  }
+  },
+
+
 }

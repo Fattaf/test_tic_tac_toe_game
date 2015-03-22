@@ -3,30 +3,26 @@ function PlayState() {};
 PlayState.prototype = {
   board: null,
 
-  // preload: function() {
-  //   console.log('PlayState#preload');
-  // },
-
   create: function() {
     console.log('PlayState#create');
+
     var self = this;
     this.board = this.add.group();
     this.makeBoard();
 
-
-    onMessage = function(msg) {
+    var onMessageEvent = function(msg) {
       var board = self.board;
       self.findCell(msg.data, board);
     };
-    SocketWrapper.onMessageHandler(onMessage);
+    SocketWrapper.onMessageHandler(onMessageEvent);
   },
 
   makeBoard: function() {
-    for(var i = 1; i <= 3; i++) {
-      for(var j = 1; j <= 3; j++) {
+    for(var i = 0; i < 20; i++) {
+      for(var j = 0; j < 20; j++) {
         var cell;
         cell = this.board.create(100*i, 100*j, 'item', 0);
-        cell.name = 'cell' + i + j;
+        cell.name = 'cell_' + i + '_' + j;
 
         cell.inputEnabled = true;
         cell.events.onInputDown.add(this.onDownAction, cell);
@@ -47,15 +43,20 @@ PlayState.prototype = {
   onDownAction: function() {
     console.log('clicked');
 
-    SocketWrapper.sendMessage(this.name);
+    var res = this.name.match(/(\d+)_(\d+)/)
+    var message = JSON.stringify({ pos_x: res[1], pos_y: res[2] })
+    SocketWrapper.sendMessage(message);
 
     this.frame = 2;
     this.events.destroy();
   },
 
-  findCell: function(name, board) {
-    console.log(name);
+  findCell: function(data, board) {
+    var obj = JSON.parse(data);
+    var name = 'cell_' + obj.pos_x + '_' + obj.pos_y;
     var children = board.children;
+
+    console.log(name);
 
     for (i in children) {
       if (children[i].name === name) {
