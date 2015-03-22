@@ -11,8 +11,14 @@ PlayState.prototype = {
     this.makeBoard();
 
     var onMessageEvent = function(msg) {
+      var data = JSON.parse(msg.data);
       var board = self.board;
-      self.findCell(msg.data, board);
+
+      if (data.status === 'finish') {
+        self.onFinish(data.msg)
+      } else {
+        self.findCell(data, board);
+      };
     };
     SocketWrapper.onMessageHandler(onMessageEvent);
   },
@@ -52,9 +58,12 @@ PlayState.prototype = {
     this.events.destroy();
   },
 
+  onFinish: function(message) {
+    this.state.start('Finish', true, false, message);
+  },
+
   findCell: function(data, board) {
-    var obj = JSON.parse(data);
-    var name = 'cell_' + obj.pos_x + '_' + obj.pos_y;
+    var name = 'cell_' + data.pos_x + '_' + data.pos_y;
     var children = board.children;
 
     for (i in children) {

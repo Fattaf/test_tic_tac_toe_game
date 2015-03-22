@@ -10,6 +10,11 @@ var SocketWrapper = {
     return this.socket;
   },
 
+  closeConnection: function() {
+    this.socket.close();
+    this.socket = null;
+  },
+
   sendMessage: function(msg) {
     this.checkConnection();
     this.socket.send(msg);

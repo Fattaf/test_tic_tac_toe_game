@@ -90,7 +90,7 @@ class App < Sinatra::Base
 
     def send_no_moves_message(player)
       message = { status: 'finish', msg: 'No moves left!' }
-      player.socket.send(message)
+      player.socket.send(message.to_json)
       send_opponent_message(player, message.to_json)
     end
 
