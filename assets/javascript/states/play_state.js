@@ -4,7 +4,7 @@ PlayState.prototype = {
   board: null,
 
   create: function() {
-    console.log('PlayState#create');
+    // console.log('PlayState#create');
 
     var self = this;
     this.board = this.add.group();
@@ -20,6 +20,7 @@ PlayState.prototype = {
         self.findCell(data, board);
       };
     };
+
     SocketWrapper.onMessageHandler(onMessageEvent);
   },
 
@@ -59,6 +60,7 @@ PlayState.prototype = {
   },
 
   onFinish: function(message) {
+    SocketWrapper.closeConnection();
     this.state.start('Finish', true, false, message);
   },
 

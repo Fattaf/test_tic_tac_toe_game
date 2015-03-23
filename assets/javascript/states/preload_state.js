@@ -4,7 +4,7 @@ PreloadState.prototype = {
   // loading_sprite: null,
 
   preload: function() {
-    console.log('PreloadState#preload');
+    // console.log('PreloadState#preload');
 
     this.launchLoader();
     this.load.image('startButton', '/images/test_play.png')
@@ -18,7 +18,7 @@ PreloadState.prototype = {
   },
 
   create: function() {
-    console.log('PreloadState#create');
+    // console.log('PreloadState#create');
 
     this.state.start('Menu');
   },
@@ -31,21 +31,21 @@ PreloadState.prototype = {
   // FIXME: free fonts
   // FIXME: free images
   launchLoader: function() {
-    var positionX = this.world.centerX,
-        positionY = this.world.centerY;
+    var posX = this.world.centerX,
+        posY = this.world.centerY;
 
-    this.addImage(positionX, positionY);
-    this.addText(positionX, positionY + 60);
+    this.addImage(posX, posY);
+    this.addText(posX, posY + 60);
   },
 
-  addImage: function(positionX, positionY) {
-    var loading_sprite = this.add.sprite(positionX, positionY, 'loading');
+  addImage: function(posX, posY) {
+    var loading_sprite = this.add.sprite(posX, posY, 'loading');
     loading_sprite.anchor.setTo(0.5,0.5);
   },
 
-  addText: function(positionX, positionY) {
+  addText: function(posX, posY) {
     var style = { font: "22px Arial", fill: "#ff0044", align: "center" };
-    var text = this.add.text(positionX, positionY, "Loading...", style);
+    var text = this.add.text(posX, posY, "Loading...", style);
     text.anchor.set(0.5);
   }
 

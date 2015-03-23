@@ -8,7 +8,7 @@ FinishState.prototype = {
   },
 
   create: function() {
-    SocketWrapper.closeConnection();
+    // SocketWrapper.closeConnection();
 
     var posX = this.world.centerX,
         posY = this.world.centerY,

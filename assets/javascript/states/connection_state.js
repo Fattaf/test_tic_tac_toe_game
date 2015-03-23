@@ -25,13 +25,12 @@ ConnectionState.prototype = {
   },
 
   openSocketConn: function() {
-    var self = this;
-
     SocketWrapper.openConnection();
 
+    var self = this;
     var onMessageEvent = function(message) {
       // FIXME: only for test. delete after.
-      console.log(message);
+      // console.log(message);
 
       var data = JSON.parse(message.data);
       self.addText(data.msg);
@@ -43,7 +42,5 @@ ConnectionState.prototype = {
 
   onSuccessEvent: function() {
     this.state.start('Play');
-  },
-
-
+  }
 }
