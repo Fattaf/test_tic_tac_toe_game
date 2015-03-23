@@ -86,7 +86,8 @@ class App < Sinatra::Base
     # on connection close
     def close_connection(ws)
       warn("websocket closed")
-      # TODO: delete game!
+      player = settings.sockets[ws.object_id]
+      player.game.disconnect(player) if player.game
       settings.sockets.delete(ws.object_id)
     end
 

@@ -29,8 +29,16 @@ class Game
     board.mark_the_move(pos_x, pos_y, sign)
 
     return send_win_msg(player) if board.has_win_on_move?(pos_x, pos_y, sign)
-    return send_no_win_msg unless !board.has_moves? # FIXME:  ->!
+    return send_no_win_msg unless board.has_moves?
     false
+  end
+
+  def disconnect(player)
+    send_disconnect_msg(player)
+    @player_x.game = nil
+    @player_o.game = nil
+    @player_x = nil
+    @player_o = nil
   end
 
   # messages
@@ -70,6 +78,12 @@ class Game
   def send_opponent_msg(player, message)
     opponent_player = opponent(player)
     opponent_player.socket.send(message)
+    true
+  end
+
+  def send_disconnect_msg(player)
+    message = { status: 'finish', msg: 'Player disconnected!' }
+    opponent(player).socket.send(message.to_json)
     true
   end
 
