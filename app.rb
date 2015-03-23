@@ -1,6 +1,5 @@
 class App < Sinatra::Base
   set :server, 'thin'
-  # FIXME: sockets == players
   set :sockets, {}
   set :open_games, []
   set :root, File.dirname(__FILE__)
@@ -37,18 +36,16 @@ class App < Sinatra::Base
 
         ws.onopen do
           # FIXME: only for test, delete after
-          sleep(2)
+          sleep(1)
 
           player = open_connection(ws)
           search_game(player)
         end
 
         ws.onmessage do |msg|
-          data = JSON.parse(msg)
-          player = settings.sockets[ws.object_id]
-
-          mark_on_board(player, data)
-          check_the_game(player, data, msg)
+          player  = settings.sockets[ws.object_id]
+          result  = player.game.check_play_msg(player, msg)
+          give_play_message(player, msg) unless result
         end
 
         ws.onclose do
@@ -60,36 +57,7 @@ class App < Sinatra::Base
   end
 
   private
-    def check_the_game(player, data, msg)
-      if player_win?(player, data)
-        send_win_move_message(player)
-      elsif !player.game.has_moves?
-        send_no_moves_message(player)
-      else
-        # game goes on!
-        send_opponent_message(player, msg)
-      end
-    end
-
-    def send_win_move_message(player)
-      message = { status: 'finish', msg: 'You win!' }
-      player.socket.send(message.to_json)
-      message[:msg] = 'You lose!'
-      send_opponent_message(player, message.to_json)
-    end
-
-    def send_no_moves_message(player)
-      message = { status: 'finish', msg: 'No moves left!' }
-      player.socket.send(message.to_json)
-      send_opponent_message(player, message.to_json)
-    end
-
-    def player_win?(player, data)
-      pos_x = data['pos_x'].to_i
-      pos_y = data['pos_y'].to_i
-      player.game.has_win_on_move?(pos_x, pos_y, player)
-    end
-
+    # on connection create
     def search_game(player)
       new_game = settings.open_games.pop
       return join_game(player, new_game) if new_game
@@ -98,19 +66,14 @@ class App < Sinatra::Base
 
     def create_game(player)
       new_game = Game.new({ player_x: player })
-      player.game = new_game
       settings.open_games << new_game
-      message = { status: 'pending', msg: 'Game created. Waiting for player.'}.to_json
-      player.socket.send(message)
+      new_game.send_waiting_msg
       new_game
     end
 
     def join_game(player, game)
-      player.game = game
-      game.player_o = player
-      message = { status: 'success', msg: 'Game found.' }.to_json
-      game.player_x.socket.send(message)
-      game.player_o.socket.send(message)
+      game.join_player(player)
+      game.send_ready_msg
       game
     end
 
@@ -120,26 +83,16 @@ class App < Sinatra::Base
       player
     end
 
-    def send_opponent_message(player, msg)
-      EM.next_tick {
-        opponent = player.game.opponent(player)
-        opponent.socket.send(msg)
-      }
-    end
-
-    def mark_on_board(player, data)
-      pos_x = data['pos_x'].to_i
-      pos_y = data['pos_y'].to_i
-      player.game.mark_the_move(pos_x, pos_y, player)
-    end
-
+    # on connection close
     def close_connection(ws)
-      # TODO: delete game!
       warn("websocket closed")
-
+      # TODO: delete game!
       settings.sockets.delete(ws.object_id)
     end
 
-end
+    # on messaging
+    def give_play_message(player, msg)
+      EM.next_tick { player.game.send_opponent_msg(player, msg) }
+    end
 
-# App.run! :port => 3000
+end

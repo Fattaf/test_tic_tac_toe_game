@@ -6,6 +6,7 @@ ConnectionState.prototype = {
   create: function() {
     console.log('ConnectionState#create');
 
+    this.outputText = null;
     this.addText('Connecting.');
     this.openSocketConn();
   },
@@ -29,6 +30,9 @@ ConnectionState.prototype = {
     SocketWrapper.openConnection();
 
     var onMessageEvent = function(message) {
+      // FIXME: only for test. delete after.
+      console.log(message);
+
       var data = JSON.parse(message.data);
       self.addText(data.msg);
       if (data.status === 'success') { self.onSuccessEvent(); };

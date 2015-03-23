@@ -1,30 +1,23 @@
-class Game
+class Board
   SIZE = 20
   WIN_LINE_SIZE = 5
   PLAYER_X_SIGN = 1
   PLAYER_Y_SIGN = 0
 
-  attr_accessor :board, :player_x, :player_o
+  attr_accessor :cells
 
-  def initialize(args = {})
-    @board = build_board
-    @player_x = args[:player_x]
-    @player_o = args[:player_o]
+  def initialize()
+    @cells = build_board
   end
 
-  def opponent(player)
-    return false unless [player_x, player_o].include?(player)
-    player === player_x ? player_o : player_x
-  end
-
-  def mark_the_move(pos_x, pos_y, player)
-    sign = give_sign(player)
-    @board[pos_x][pos_y] = sign
-    board
+  def mark_the_move(pos_x, pos_y, sign)
+    # sign = give_sign(player)
+    cells[pos_x][pos_y] = sign
+    cells
   end
 
   def has_moves?
-    board.each do |row|
+    cells.each do |row|
       row.each do |element|
         return true unless element
       end
@@ -32,8 +25,8 @@ class Game
     false
   end
 
-  def has_win_on_move?(pos_x, pos_y, player)
-    sign = give_sign(player)
+  def has_win_on_move?(pos_x, pos_y, sign)
+    # sign = give_sign(player)
     edges_x = give_edges(pos_x)
     edges_y = give_edges(pos_y)
 
@@ -44,16 +37,14 @@ class Game
     false
   end
 
+
   private
     def build_board
       new_board = Array.new(SIZE)
-      SIZE.times{|i| new_board[i] = Array.new(SIZE) }
+      SIZE.times do |i|
+        new_board[i] = Array.new(SIZE)
+      end
       new_board
-    end
-
-    def give_sign(player)
-      return nil unless [player_x, player_o].include?(player)
-      player === player_x ? PLAYER_X_SIGN : PLAYER_Y_SIGN
     end
 
     def give_edges(pos)
@@ -62,11 +53,12 @@ class Game
       (x..y)
     end
 
-    # TODO: refactoring
+    # TODO: refactoring !!!
+
     def x_line_has_win?(edges, pos_y, win_sign)
       counter = 0
       edges.each do |i|
-        counter = (board[i][pos_y] == win_sign) ? counter + 1 : 0
+        counter = (cells[i][pos_y] == win_sign) ? counter + 1 : 0
       end
       counter >= WIN_LINE_SIZE
     end
@@ -74,7 +66,7 @@ class Game
     def y_line_has_win?(edges, pos_x, win_sign)
       counter = 0
       edges.each do |i|
-        counter = (board[pos_x][i] == win_sign) ? counter + 1 : 0
+        counter = (cells[pos_x][i] == win_sign) ? counter + 1 : 0
       end
       counter >= WIN_LINE_SIZE
     end
@@ -83,7 +75,7 @@ class Game
       counter = 0
       edges_x.each do |i|
         edges_y.each do |j|
-          counter = (board[i][j] == win_sign) ? counter + 1 : 0
+          counter = (cells[i][j] == win_sign) ? counter + 1 : 0
         end
       end
       counter >= WIN_LINE_SIZE
