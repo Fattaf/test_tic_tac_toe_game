@@ -1,13 +1,3 @@
-require 'thin'
-require 'json'
-require 'sinatra/base'
-require 'sinatra-websocket'
-require 'sinatra/assetpack'
-
-require './lib/game.rb'
-require './lib/player.rb'
-# TODO: config.ru
-
 class App < Sinatra::Base
   set :server, 'thin'
   # FIXME: sockets == players
@@ -152,4 +142,4 @@ class App < Sinatra::Base
 
 end
 
-App.run! :port => 3000
+# App.run! :port => 3000
