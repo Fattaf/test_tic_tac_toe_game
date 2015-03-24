@@ -13,6 +13,7 @@ class App < Sinatra::Base
 
     js :app, '/js/app.js', [
       '/js/socket_wrapper.js',
+      '/js/board.js',
       '/js/states/*.js',
       '/js/game.js'
     ]
