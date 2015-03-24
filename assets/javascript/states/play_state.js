@@ -3,20 +3,20 @@ function PlayState() {};
 PlayState.prototype = {
   board: null,
 
-  create: function() {
+  init: function(state) {
     this.board = new Board(this.game);
     this.board.init();
+    if (state === 'pause') { this.board.onPause(); };
+  },
 
+  create: function() {
 
     // FIXIME: refactoring, smells bad!
     var self = this;
     var onMessageEvent = function(msg) {
-      console.log(msg);
-
       var result = self.board.handleMessage(msg);
       if (result !== true) { self.onFinish(result.msg) };
     };
-
     SocketWrapper.onMessageHandler(onMessageEvent);
   },
 

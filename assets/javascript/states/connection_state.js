@@ -4,8 +4,6 @@ ConnectionState.prototype = {
   outputText: null,
 
   create: function() {
-    // console.log('ConnectionState#create');
-
     this.outputText = null;
     this.addText('Connecting.');
     this.openSocketConn();
@@ -27,20 +25,18 @@ ConnectionState.prototype = {
   openSocketConn: function() {
     SocketWrapper.openConnection();
 
+    // FIXIME: refactoring, smells bad!
     var self = this;
     var onMessageEvent = function(message) {
-      // FIXME: only for test. delete after.
-      // console.log(message);
-
       var data = JSON.parse(message.data);
       self.addText(data.msg);
-      if (data.status === 'success') { self.onSuccessEvent(); };
+      if (data.status === 'success') { self.onSuccessEvent(data.state); };
     };
 
     SocketWrapper.onMessageHandler(onMessageEvent);
   },
 
-  onSuccessEvent: function() {
-    this.state.start('Play');
+  onSuccessEvent: function(state) {
+    this.state.start('Play', true, false, state);
   }
 }

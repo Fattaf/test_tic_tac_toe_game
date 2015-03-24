@@ -49,14 +49,9 @@ class Game
   end
 
   def send_ready_msg
-    message = { status: 'success', msg: 'Game found.' }
+    message = { status: 'success', msg: 'Game found.', state: 'pause' }
     player_x.socket.send(message.to_json)
-    player_o.socket.send(message.to_json)
-    true
-  end
-
-  def send_start_msg
-    message = { status: 'test' }
+    message = { status: 'success', msg: 'Game found.', state: 'play'}
     player_o.socket.send(message.to_json)
     true
   end

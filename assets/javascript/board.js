@@ -9,8 +9,6 @@ var Board = function(game) {
         this.addCellEvents(cell);
       }
     };
-
-    this.onPause();
   };
 
   this.addCellData = function(cell, i, j) {
@@ -46,16 +44,11 @@ var Board = function(game) {
   };
 
   this.handleMessage = function(message) {
-    console.log('---')
-    console.log(msg);
-
-    var data = JSON.parse(message.data);
 
     if (data.status === 'finish') { return data; };
 
     this.onPlay();
-
-    if (data.status === 'move') { this.markCell(data); };
+    this.markCell(data);
 
     return true;
   };
@@ -77,14 +70,12 @@ var Board = function(game) {
     for (i in this.children) {
       this.children[i].inputEnabled = false;
     };
-    console.log('pause');
   };
 
   this.onPlay = function() {
     for (i in this.children) {
       this.children[i].inputEnabled = true;
     };
-    console.log('play');
   };
 
 };
