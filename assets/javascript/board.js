@@ -4,8 +4,8 @@ var Board = function(game) {
   this.init = function() {
     for(var i = 0; i < 20; i++) {
       for(var j = 0; j < 20; j++) {
-        var cell = this.create(100*i, 100*j, 'item', 0);
-        this.addCellData(cell, i, j);
+        var cell = this.create(40*i, 40*j, 'item', 0);
+        this.addCellData(cell, j, i);
         this.addCellEvents(cell);
       }
     };
@@ -29,11 +29,11 @@ var Board = function(game) {
   };
 
   this.onNarrowAction = function(cell) {
-    cell.frame = 1;
+    cell.frame = 2;
   };
 
   this.onDownAction = function(cell) {
-    cell.frame = 2;
+    cell.frame = 3;
     cell.events.destroy();
 
     this.onPause();
@@ -44,6 +44,7 @@ var Board = function(game) {
   };
 
   this.handleMessage = function(message) {
+    var data = JSON.parse(message.data);
 
     if (data.status === 'finish') { return data; };
 
@@ -59,7 +60,7 @@ var Board = function(game) {
 
     for (i in children) {
       if (children[i].name === name) {
-        children[i].frame = 3;
+        children[i].frame = 1;
         children[i].events.destroy();
         break;
       };

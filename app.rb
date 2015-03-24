@@ -33,7 +33,6 @@ class App < Sinatra::Base
     else
       request.websocket do |ws|
         # TODO: on error
-        # FIXME: ready message form opponent
 
         ws.onopen do
           # FIXME: only for test, delete after
