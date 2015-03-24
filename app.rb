@@ -75,6 +75,8 @@ class App < Sinatra::Base
     def join_game(player, game)
       game.join_player(player)
       game.send_ready_msg
+      sleep(1)
+      game.send_start_msg
       game
     end
 

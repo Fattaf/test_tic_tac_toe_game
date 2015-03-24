@@ -55,6 +55,12 @@ class Game
     true
   end
 
+  def send_start_msg
+    message = { status: 'test' }
+    player_o.socket.send(message.to_json)
+    true
+  end
+
   def send_win_msg(player)
     message = { status: 'finish', msg: 'You win!' }
     player.socket.send(message.to_json)
@@ -75,15 +81,15 @@ class Game
     true
   end
 
-  def send_opponent_msg(player, message)
-    opponent_player = opponent(player)
-    opponent_player.socket.send(message)
-    true
-  end
-
   def send_disconnect_msg(player)
     message = { status: 'finish', msg: 'Player disconnected!' }
     opponent(player).socket.send(message.to_json)
+    true
+  end
+
+  def send_opponent_msg(player, message)
+    opponent_player = opponent(player)
+    opponent_player.socket.send(message)
     true
   end
 

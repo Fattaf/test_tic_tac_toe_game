@@ -9,6 +9,8 @@ var Board = function(game) {
         this.addCellEvents(cell);
       }
     };
+
+    this.onPause();
   };
 
   this.addCellData = function(cell, i, j) {
@@ -36,17 +38,25 @@ var Board = function(game) {
     cell.frame = 2;
     cell.events.destroy();
 
+    this.onPause();
+
     // FIXME: refactoring. smells bad!!!
     var message = { status: 'move', pos_x: cell.pos_x, pos_y: cell.pos_y };
     SocketWrapper.sendMessage(JSON.stringify(message));
   };
 
   this.handleMessage = function(message) {
+    console.log('---')
+    console.log(msg);
+
     var data = JSON.parse(message.data);
 
     if (data.status === 'finish') { return data; };
 
-    this.markCell(data);
+    this.onPlay();
+
+    if (data.status === 'move') { this.markCell(data); };
+
     return true;
   };
 
@@ -63,8 +73,19 @@ var Board = function(game) {
     };
   };
 
-  this.onPause = function() {};
-  this.onPlay = function() {};
+  this.onPause = function() {
+    for (i in this.children) {
+      this.children[i].inputEnabled = false;
+    };
+    console.log('pause');
+  };
+
+  this.onPlay = function() {
+    for (i in this.children) {
+      this.children[i].inputEnabled = true;
+    };
+    console.log('play');
+  };
 
 };
 

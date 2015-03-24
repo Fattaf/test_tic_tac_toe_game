@@ -4,7 +4,7 @@ ConnectionState.prototype = {
   outputText: null,
 
   create: function() {
-    console.log('ConnectionState#create');
+    // console.log('ConnectionState#create');
 
     this.outputText = null;
     this.addText('Connecting.');
