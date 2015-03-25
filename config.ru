@@ -10,4 +10,5 @@ end
 
 require './app.rb'
 
-Rack::Handler::Thin.run App.new, :Port => 3000
+# Rack::Handler::Thin.run App.new #, :Port => 3000
+run App
