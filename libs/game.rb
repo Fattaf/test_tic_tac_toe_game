@@ -1,6 +1,6 @@
 class Game
   PLAYER_X_SIGN = 1
-  PLAYER_Y_SIGN = 0
+  PLAYER_Y_SIGN = 2
 
   attr_accessor :board, :player_x, :player_o
 
