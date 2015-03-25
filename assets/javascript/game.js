@@ -1,5 +1,5 @@
 (function() {
-  var game = new Phaser.Game(800, 800, Phaser.CANVAS, 'TicTacToe');
+  var game = new Phaser.Game(1000, 850, Phaser.CANVAS, 'TicTacToe');
 
   game.state.add('Boot', BootState);
   game.state.add('Preload', PreloadState);
