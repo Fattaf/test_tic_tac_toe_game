@@ -50,7 +50,6 @@ var Board = function(game) {
 
     this.onPlay();
     this.markCell(data);
-
     return true;
   };
 

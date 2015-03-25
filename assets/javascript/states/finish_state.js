@@ -8,8 +8,6 @@ FinishState.prototype = {
   },
 
   create: function() {
-    // SocketWrapper.closeConnection();
-
     var posX = this.world.centerX,
         posY = this.world.centerY,
         style = { font: "22px Arial", fill: "#ff0044", align: "center" };
@@ -23,7 +21,7 @@ FinishState.prototype = {
   },
 
   addButton: function(posX, posY, style) {
-    var button = this.add.button(posX, posY, 'startButton', this.actionOnClick, this);
+    var button = this.add.button(posX, posY, 'startButton', this.actionOnClick, this, 1, 0);
     button.anchor.setTo(0.5, 0.1);
   },
 

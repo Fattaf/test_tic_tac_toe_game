@@ -30,6 +30,8 @@ ConnectionState.prototype = {
     var onMessageEvent = function(message) {
       var data = JSON.parse(message.data);
       self.addText(data.msg);
+      self.game.sleep(1000);
+
       if (data.status === 'success') { self.onSuccessEvent(data.state); };
     };
 

@@ -3,10 +3,8 @@ var SocketWrapper = {
 
   openConnection: function() {
     if (this.socket !== null) { return this.socket; };
-
     var path = 'ws://' + window.location.host + window.location.pathname;
     this.socket = new WebSocket(path);
-
     return this.socket;
   },
 

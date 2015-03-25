@@ -53,9 +53,7 @@ class Board
 
     # TODO: refactoring !!!
     def x_line_has_win?(edges, pos_y, win_sign)
-      final_size = 0
-      counter = 0
-
+      final_size, counter = 0, 0
       edges.each do |i|
         if cells[i][pos_y] == win_sign
           counter += 1
@@ -69,9 +67,7 @@ class Board
 
     # TODO: refactoring !!!
     def y_line_has_win?(edges, pos_x, win_sign)
-      final_size = 0
-      counter = 0
-
+      final_size, counter = 0, 0
       edges.each do |i|
         if cells[pos_x][i] == win_sign
           counter += 1
