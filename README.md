@@ -1,1 +1,3 @@
-# test_tic_tac_toe_game
+# Test Tic Tac Toe Game
+
+To run call: rackup
