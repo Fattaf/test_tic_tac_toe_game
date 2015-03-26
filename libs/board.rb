@@ -84,8 +84,8 @@ class Board
 
     def y_x_diagonal_has_win?(win_sign, pos_x, pos_y)
       diff = (SIZE - 1 - pos_x) - pos_y
-      new_y = diff >= 0 ? 0 : -diff
-      new_x = diff >= 0 ? diff : SIZE - 1
+      new_y = diff >= 0 ? 0 : SIZE - 1
+      new_x = diff >= 0 ? SIZE - 1 - diff.abs : diff.abs
 
       final_size, counter = 0, 0
       (SIZE - diff.abs).times do |i|
