@@ -8,11 +8,9 @@ FinishState.prototype = {
   },
 
   create: function() {
-    // SocketWrapper.closeConnection();
-
     var posX = this.world.centerX,
         posY = this.world.centerY,
-        style = { font: "22px Arial", fill: "#ff0044", align: "center" };
+        style = { font: "28px Arial", fill: "#ff0044", align: "center" };
 
     this.addText(posX, posY, style);
     this.addButton(posX, posY, style);
@@ -23,13 +21,13 @@ FinishState.prototype = {
   },
 
   addButton: function(posX, posY, style) {
-    var button = this.add.button(posX, posY, 'startButton', this.actionOnClick, this);
+    var button = this.add.button(posX, posY, 'finishButton', this.actionOnClick, this, 1, 0);
     button.anchor.setTo(0.5, 0.1);
   },
 
   addText: function(posX, posY, style) {
-    var text = this.add.text(posX, posY, this.outputText, style);
-    text.anchor.set(0.5, 0.9);
+    var text = this.add.text(posX, posY - 50, this.outputText, style);
+    text.anchor.set(0.5, 0.5);
   }
 
 }

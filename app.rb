@@ -8,22 +8,17 @@ class App < Sinatra::Base
 
   assets {
     serve '/js',     from: 'assets/javascript'
-    # serve '/css',    from: 'assets/css'
     serve '/images', from: 'assets/images'
 
     js :app, '/js/app.js', [
       '/js/socket_wrapper.js',
+      '/js/pause_panel.js',
       '/js/board.js',
       '/js/states/*.js',
       '/js/game.js'
     ]
 
-    # css :application, '/css/application.css', [
-    #   '/css/screen.css'
-    # ]
-
     js_compression  :jsmin
-    # css_compression :simple
   }
 
   # routes
@@ -32,12 +27,8 @@ class App < Sinatra::Base
       erb :index
     else
       request.websocket do |ws|
-        # TODO: on error
 
         ws.onopen do
-          # FIXME: only for test, delete after
-          sleep(1)
-
           player = open_connection(ws)
           search_game(player)
         end

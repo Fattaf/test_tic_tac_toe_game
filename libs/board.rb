@@ -1,8 +1,6 @@
 class Board
   SIZE = 20
   WIN_LINE_SIZE = 5
-  PLAYER_X_SIGN = 1
-  PLAYER_Y_SIGN = 0
 
   attr_accessor :cells
 
@@ -30,11 +28,10 @@ class Board
 
     return true if y_line_has_win?(edges_y, pos_x, sign)
     return true if x_line_has_win?(edges_x, pos_y, sign)
-    return true if x_y_diagonal_has_win?(edges_x, edges_y, sign)
-    return true if y_x_diagonal_has_win?(edges_x, edges_y, sign)
+    return true if x_y_diagonal_has_win?(sign, pos_x, pos_y)
+    return true if y_x_diagonal_has_win?(sign, pos_x, pos_y)
     false
   end
-
 
   private
     def build_board
@@ -51,77 +48,51 @@ class Board
       (x..y)
     end
 
-    # TODO: refactoring !!!
     def x_line_has_win?(edges, pos_y, win_sign)
-      final_size = 0
-      counter = 0
-
+      final_size, counter = 0, 0
       edges.each do |i|
-        if cells[i][pos_y] == win_sign
-          counter += 1
-        else
-          final_size = counter if counter > final_size
-          counter = 0
-        end
+        counter += 1          if cells[i][pos_y] == win_sign
+        final_size = counter  if counter > final_size
+        counter = 0           if cells[i][pos_y] != win_sign
       end
       final_size >= WIN_LINE_SIZE
     end
 
-    # TODO: refactoring !!!
     def y_line_has_win?(edges, pos_x, win_sign)
-      final_size = 0
-      counter = 0
-
+      final_size, counter = 0, 0
       edges.each do |i|
-        if cells[pos_x][i] == win_sign
-          counter += 1
-        else
-          final_size = counter if counter > final_size
-          counter = 0
-        end
+        counter += 1          if cells[pos_x][i] == win_sign
+        final_size = counter  if counter > final_size
+        counter = 0           if cells[pos_x][i] != win_sign
       end
       final_size >= WIN_LINE_SIZE
     end
 
-    # TODO: refactoring !!!
-    def x_y_diagonal_has_win?(edges_x, edges_y, win_sign)
-      # final_size = 0
-      # counter = 0
-      # x = edges_x.first
-      # y = edges_y.first
+    def x_y_diagonal_has_win?(win_sign, pos_x, pos_y)
+      diff = pos_x - pos_y
+      new_y = diff >= 0 ? 0 : -diff
+      new_x = diff >= 0 ? diff : 0
 
-      # 9.times do |i|
-      #   if cells[x + i][y + i] == win_sign
-      #     counter += 1
-      #   else
-      #     final_size = counter if counter > final_size
-      #     counter = 0
-      #   end
-      # end
-      # final_size >= WIN_LINE_SIZE
-      false
+      final_size, counter = 0, 0
+      (SIZE - diff.abs).times do |i|
+        counter += 1          if cells[new_x + i][new_y + i] == win_sign
+        final_size = counter  if counter > final_size
+        counter = 0           if cells[new_x + i][new_y + i] != win_sign
+      end
+      final_size >= WIN_LINE_SIZE
     end
 
-    def y_x_diagonal_has_win?(edges_x, edges_y, win_sign)
-      # final_size = 0
-      # counter = 0
-      # x = edges_x.last
-      # y = edges_y.first
+    def y_x_diagonal_has_win?(win_sign, pos_x, pos_y)
+      diff = (SIZE - 1 - pos_x) - pos_y
+      new_y = diff >= 0 ? 0 : -diff
+      new_x = diff >= 0 ? diff : SIZE - 1
 
-      # p [x, y]
-
-      # 9.times do |i|
-      #   p [x - i, y + i]
-      #   p cells[x - i][y - i]
-
-      #   if cells[x - i][y - i] == win_sign
-      #     counter += 1
-      #   else
-      #     final_size = counter if counter > final_size
-      #     counter = 0
-      #   end
-      # end
-      # final_size >= WIN_LINE_SIZE
-      false
+      final_size, counter = 0, 0
+      (SIZE - diff.abs).times do |i|
+        counter += 1          if cells[new_x - i][new_y + i] == win_sign
+        final_size = counter  if counter > final_size
+        counter = 0           if cells[new_x - i][new_y + i] != win_sign
+      end
+      final_size >= WIN_LINE_SIZE
     end
 end

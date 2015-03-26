@@ -1,1 +1,5 @@
-# test_tic_tac_toe_game
+# Test Tic Tac Toe Game
+
+Used phaser.js 2.2 
+
+To run call: rackup

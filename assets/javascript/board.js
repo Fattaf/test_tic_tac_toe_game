@@ -1,10 +1,16 @@
 var Board = function(game) {
   Phaser.Group.call(this, game);
 
-  this.init = function() {
+  this.init = function(disp_x, disp_y) {
+    this.pausePanel = new PausePanel(this.game);
+    this.pausePanel.init();
+    this.buildField(disp_x, disp_y);
+  };
+
+  this.buildField = function(disp_x, disp_y) {
     for(var i = 0; i < 20; i++) {
       for(var j = 0; j < 20; j++) {
-        var cell = this.create(40*i, 40*j, 'item', 0);
+        var cell = this.create(disp_x + 40*i, disp_y + 40*j, 'item', 0);
         this.addCellData(cell, j, i);
         this.addCellEvents(cell);
       }
@@ -38,7 +44,6 @@ var Board = function(game) {
 
     this.onPause();
 
-    // FIXME: refactoring. smells bad!!!
     var message = { status: 'move', pos_x: cell.pos_x, pos_y: cell.pos_y };
     SocketWrapper.sendMessage(JSON.stringify(message));
   };
@@ -50,7 +55,6 @@ var Board = function(game) {
 
     this.onPlay();
     this.markCell(data);
-
     return true;
   };
 
@@ -71,12 +75,14 @@ var Board = function(game) {
     for (i in this.children) {
       this.children[i].inputEnabled = false;
     };
+    this.pausePanel.show();
   };
 
   this.onPlay = function() {
     for (i in this.children) {
       this.children[i].inputEnabled = true;
     };
+    this.pausePanel.hide();
   };
 
 };

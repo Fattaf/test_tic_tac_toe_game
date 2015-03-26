@@ -4,7 +4,6 @@ class Player
   def initialize(args = {})
     @socket = args[:socket]
     @game   = args[:game]
-    # @sign   = args[:play_sign]
   end
 
 end
